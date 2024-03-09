@@ -15,6 +15,7 @@ namespace LiteDB.Studio
         [STAThread]
         static void Main(string[] args)
         {
+            var x = new LiteDatabase("ddddd");
             Application.ApplicationExit += OnExit;
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);

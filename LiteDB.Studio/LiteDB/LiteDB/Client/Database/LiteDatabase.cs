@@ -35,6 +35,7 @@ namespace LiteDB
         public LiteDatabase(string connectionString, BsonMapper mapper = null)
             : this(new ConnectionString(connectionString), mapper)
         {
+            Console.WriteLine("sssss");
         }
 
         /// <summary>
