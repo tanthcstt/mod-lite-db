@@ -35,7 +35,6 @@ namespace LiteDB
         public LiteDatabase(string connectionString, BsonMapper mapper = null)
             : this(new ConnectionString(connectionString), mapper)
         {
-            Console.WriteLine("sssss");
         }
 
         /// <summary>
@@ -228,6 +227,7 @@ namespace LiteDB
 
             var tokenizer = new Tokenizer(commandReader);
             var sql = new SqlParser(_engine, tokenizer, parameters);
+            Console.WriteLine("aaa"); 
             var reader = sql.Execute();
 
             return reader;
@@ -239,7 +239,7 @@ namespace LiteDB
         public IBsonDataReader Execute(string command, BsonDocument parameters = null)
         {
             if (command == null) throw new ArgumentNullException(nameof(command));
-
+            Console.WriteLine("aaa");
             var tokenizer = new Tokenizer(command);
             var sql = new SqlParser(_engine, tokenizer, parameters);
             var reader = sql.Execute();
@@ -260,7 +260,7 @@ namespace LiteDB
                 p[index.ToString()] = arg;
                 index++;
             }
-
+            Console.WriteLine("aaa");
             return this.Execute(command, p);
         }
 

@@ -31,9 +31,9 @@ namespace LiteDB
             return new BsonDataReader(result);
         }
 
-        private BsonDataReader TanParseInsert()
+        private BsonDataReader ParseInsertImage()
         {
-            _tokenizer.ReadToken().Expect("TANINSERT");
+            _tokenizer.ReadToken().Expect("INSERT_IMG");
             _tokenizer.ReadToken().Expect("INTO");
 
             var collection = _tokenizer.ReadToken().Expect(TokenType.Word).Value;

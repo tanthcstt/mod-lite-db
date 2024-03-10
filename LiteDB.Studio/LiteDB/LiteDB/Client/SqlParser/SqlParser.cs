@@ -28,14 +28,15 @@ namespace LiteDB
         public IBsonDataReader Execute()
         {
             var ahead = _tokenizer.LookAhead().Expect(TokenType.Word);
-
             LOG($"executing `{ahead.Value.ToUpper()}`", "SQL");
-
+         
             switch (ahead.Value.ToUpper())
             {
-                case "SELECT": 
+                case "SELECT":
                 case "EXPLAIN":
                     return this.ParseSelect();
+                case "SELECT_IMAGE":
+                    return this.ParseSelectImage();
                 case "INSERT": return this.ParseInsert();
                 case "DELETE": return this.ParseDelete();
                 case "UPDATE": return this.ParseUpdate();
@@ -51,9 +52,9 @@ namespace LiteDB
                 case "COMMIT": return this.ParseCommit();
 
                 case "PRAGMA": return this.ParsePragma();
-                case "TANINSERT": return this.TanParseInsert();
+                case "INSERT_IMG": return this.ParseInsertImage();
 
-                default:  throw LiteException.UnexpectedToken(ahead);
+                default: throw LiteException.UnexpectedToken(ahead);
             }
         }
     }

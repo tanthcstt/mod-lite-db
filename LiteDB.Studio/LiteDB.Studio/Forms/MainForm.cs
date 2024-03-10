@@ -226,6 +226,7 @@ namespace LiteDB.Studio
 
             task.Filename = filename;
             task.EditorContent = content;
+          
             task.Thread = new Thread(new ThreadStart(() => CreateThread(task)));
             task.Thread.Start();
 
@@ -600,6 +601,47 @@ namespace LiteDB.Studio
 
             this.ExecuteSql(sql);
         }
+
+        private void BtnInsertImage_Click(object sender, EventArgs e)
+        {
+       
+            using (OpenFileDialog openFileDialog = new OpenFileDialog())
+            {
+                openFileDialog.Filter = "Image Files|*.jpg;*.jpeg;*.png;*.gif;*.bmp|All Files|*.*";
+                openFileDialog.Title = "Select an Image File";
+
+                if (openFileDialog.ShowDialog() == DialogResult.OK)
+                {
+                    try
+                    {
+                        // Get the selected image file path
+                        string imagePath = openFileDialog.FileName;
+
+                        // Read the image bytes
+                        byte[] imageBytes = File.ReadAllBytes(imagePath);
+
+                        // Get the project path
+                        string projectPath = Path.GetDirectoryName(_connectionString.Filename);
+
+                        // Construct the destination path within the project
+                        string destinationPath = Path.Combine(projectPath, "Images", Path.GetFileName(imagePath));
+
+                        // Write the image bytes to the destination file
+                        File.WriteAllBytes(destinationPath, imageBytes);
+
+                        // Display the path in the text editor
+                        txtSql.Text += $"Image({destinationPath})";
+
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show("Error inserting the image: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
+                }
+            }
+        }
+
+
 
         private void BtnBegin_Click(object sender, EventArgs e)
         {

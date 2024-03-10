@@ -59,6 +59,7 @@
             this.btnRefresh = new System.Windows.Forms.ToolStripButton();
             this.tlbSep2 = new System.Windows.Forms.ToolStripSeparator();
             this.btnRun = new System.Windows.Forms.ToolStripButton();
+            this.btnInsertImage = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator7 = new System.Windows.Forms.ToolStripSeparator();
             this.btnLoadSql = new System.Windows.Forms.ToolStripButton();
             this.btnSaveSql = new System.Windows.Forms.ToolStripButton();
@@ -366,6 +367,7 @@
             this.btnRefresh,
             this.tlbSep2,
             this.btnRun,
+            this.btnInsertImage,
             this.toolStripSeparator7,
             this.btnLoadSql,
             this.btnSaveSql,
@@ -469,6 +471,15 @@
             this.btnRun.Size = new System.Drawing.Size(64, 30);
             this.btnRun.Text = "Run";
             this.btnRun.Click += new System.EventHandler(this.BtnRun_Click);
+            // btn_insertImage
+            // 
+            this.btnInsertImage.Image = global::LiteDB.Studio.Properties.Resources.resultset_next;
+            this.btnInsertImage.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.btnInsertImage.Name = "btnInsertImage";
+            this.btnInsertImage.Padding = new System.Windows.Forms.Padding(3);
+            this.btnInsertImage.Size = new System.Drawing.Size(64, 30);
+            this.btnInsertImage.Text = "Insert";
+            this.btnInsertImage.Click += new System.EventHandler(this.BtnInsertImage_Click);
             // 
             // toolStripSeparator7
             // 
@@ -791,6 +802,7 @@
         private System.Windows.Forms.ToolStripButton btnRefresh;
         private System.Windows.Forms.ToolStripButton btnRollback;
         private System.Windows.Forms.ToolStripButton btnRun;
+        private System.Windows.Forms.ToolStripButton btnInsertImage;
         private System.Windows.Forms.ToolStripMenuItem recentListSettings;
         private System.Windows.Forms.ContextMenuStrip ctxMenu;
         private System.Windows.Forms.ContextMenuStrip ctxMenuRoot;
