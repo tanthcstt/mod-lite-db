@@ -625,12 +625,10 @@ namespace LiteDB.Studio
 
                         // Construct the destination path within the project
                         string destinationPath = Path.Combine(projectPath, "Images", Path.GetFileName(imagePath));
-
-                        // Write the image bytes to the destination file
-                        File.WriteAllBytes(destinationPath, imageBytes);
-
+                        destinationPath = destinationPath.Replace("\\", "\\\\");
                         // Display the path in the text editor
-                        txtSql.Text += $"Image({destinationPath})";
+                        txtSql.ActiveTextAreaControl.TextArea.InsertString($"Image({destinationPath})");
+                    
 
                     }
                     catch (Exception ex)

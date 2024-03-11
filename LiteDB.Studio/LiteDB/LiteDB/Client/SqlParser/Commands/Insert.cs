@@ -27,6 +27,7 @@ namespace LiteDB
             var docs = this.ParseListOfDocuments();
 
             var result = _engine.Insert(collection, docs, autoId);
+            Console.WriteLine(result);  
 
             return new BsonDataReader(result);
         }

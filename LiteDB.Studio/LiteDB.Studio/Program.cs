@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using ICSharpCode.TextEditor.Util;
@@ -14,8 +15,7 @@ namespace LiteDB.Studio
         /// </summary>
         [STAThread]
         static void Main(string[] args)
-        {
-            var x = new LiteDatabase("ddddd");
+        {           
             Application.ApplicationExit += OnExit;
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);

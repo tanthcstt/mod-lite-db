@@ -114,8 +114,9 @@ namespace LiteDB
                     break;
 
                 case BsonType.MaxValue:
-                    this.WriteExtendDataType("$maxValue", "1");
+                    this.WriteExtendDataType("$maxValue", "1");                  
                     break;
+
             }
         }
 

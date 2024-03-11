@@ -118,7 +118,6 @@ namespace LiteDB.Studio
                     Pretty = true,
                     Indent = 2
                 };
-
                 if (data.Result.Count > 0)
                 {
                     foreach (var value in data.Result)
@@ -130,6 +129,8 @@ namespace LiteDB.Studio
 
                         json.Serialize(value);
                         sb.AppendLine();
+
+
                     }
 
                     if (data.LimitExceeded)

@@ -52,7 +52,7 @@ namespace LiteDB
                 case "COMMIT": return this.ParseCommit();
 
                 case "PRAGMA": return this.ParsePragma();
-                case "INSERT_IMG": return this.ParseInsertImage();
+              //  case "INSERT_IMG": return this.ParseInsertImage();
 
                 default: throw LiteException.UnexpectedToken(ahead);
             }
