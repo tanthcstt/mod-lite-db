@@ -36,6 +36,8 @@ namespace LiteDB
             : this(new ConnectionString(connectionString), mapper)
         {
             Console.WriteLine("Aaaa");
+            ConnectionManager connectionManager = ConnectionManager.GetInstance();   
+            connectionManager.ConnectionString = new ConnectionString(connectionString);    
         }
 
         /// <summary>
@@ -48,6 +50,8 @@ namespace LiteDB
             _engine = connectionString.CreateEngine();
             _mapper = mapper ?? BsonMapper.Global;
             _disposeOnClose = true;
+            ConnectionManager connectionManager = ConnectionManager.GetInstance();
+            connectionManager.ConnectionString = connectionString;
         }
 
         /// <summary>

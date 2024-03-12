@@ -1,8 +1,11 @@
-﻿using System;
+﻿using Newtonsoft.Json.Linq;
+using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
+using System.Text.RegularExpressions;
 using static LiteDB.Constants;
 
 namespace LiteDB.Engine
@@ -28,12 +31,16 @@ namespace LiteDB.Engine
 
                 foreach (var doc in docs)
                 {
+                    //save image here
+
                     _state.Validate();
 
                     transaction.Safepoint();
 
                     this.InsertDocument(snapshot, doc, autoId, indexer, data);
-
+                    
+                    var x = IsImage(doc, OnInsertImage);   
+                    Console.WriteLine(x);
                     count++;
                 }
 
@@ -88,5 +95,45 @@ namespace LiteDB.Engine
                 }
             }
         }
+        /// <summary>
+        /// test insert image, save image to path , TODO: SAVE IMG BY BSON
+        /// </summary>
+        /// <param name="path"></param>
+        private void OnInsertImage(string path)
+        {
+       
+            string saveDirectory =Path.GetDirectoryName(ConnectionManager.GetInstance().ConnectionString.Filename);
+            saveDirectory = Path.Combine(saveDirectory, "Images");
+            byte[] imageBytes = File.ReadAllBytes(path);
+            File.WriteAllBytes(Path.Combine(saveDirectory, Path.GetFileName(path)), imageBytes);
+
+
+        }
+
+        private bool IsImage(BsonDocument doc, Action<string> callback = null)
+        {
+            string pattern = @"Image\((.*?)\)";
+            foreach (BsonValue value in doc.Values)
+            {
+                if (value.Type == BsonType.String)
+                {
+                    var docString = value.AsString;
+                    Console.WriteLine(docString);
+                    Match match = Regex.Match(docString, pattern);
+                    if (match.Success)
+                    {
+                        // Extract the path
+                        string path = match.Groups[1].Value;
+                        callback?.Invoke(path); 
+                        return true;
+                    }
+                }
+            }
+           
+
+            return false;    
+        }
+
+      
     }
 }

@@ -27,7 +27,7 @@ namespace LiteDB.Studio
         private DatabaseDebugger _debugger = null;
         private ConnectionString _connectionString = null;
         private SqlCodeCompletion _codeCompletion;
-
+        public ConnectionString ConnectionString { get { return _connectionString; } }
         public MainForm(string filename)
         {
             InitializeComponent();
@@ -618,16 +618,16 @@ namespace LiteDB.Studio
                         string imagePath = openFileDialog.FileName;
 
                         // Read the image bytes
-                        byte[] imageBytes = File.ReadAllBytes(imagePath);
+                        //  byte[] imageBytes = File.ReadAllBytes(imagePath);
 
                         // Get the project path
-                        string projectPath = Path.GetDirectoryName(_connectionString.Filename);
+                        //   string projectPath = Path.GetDirectoryName(_connectionString.Filename);
 
                         // Construct the destination path within the project
-                        string destinationPath = Path.Combine(projectPath, "Images", Path.GetFileName(imagePath));
-                        destinationPath = destinationPath.Replace("\\", "\\\\");
+                        //   string destinationPath = Path.Combine(projectPath, "Images", Path.GetFileName(imagePath));
+                        imagePath = imagePath.Replace("\\", "\\\\");
                         // Display the path in the text editor
-                        txtSql.ActiveTextAreaControl.TextArea.InsertString($"Image({destinationPath})");
+                        txtSql.ActiveTextAreaControl.TextArea.InsertString($"\"Image({imagePath})\"");
                     
 
                     }
