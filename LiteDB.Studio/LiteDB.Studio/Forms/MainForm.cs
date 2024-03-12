@@ -14,6 +14,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using ICSharpCode.TextEditor.Util;
+using System.Text.RegularExpressions;
 
 namespace LiteDB.Studio
 {
@@ -388,6 +389,7 @@ namespace LiteDB.Studio
                 grdResult.Clear();
                 txtResult.Clear();
                 txtParameters.Clear();
+                imgBox.Image = null;    
 
                 lblResultCount.Visible = false;
                 lblElapsed.Text = "Running";
@@ -427,6 +429,37 @@ namespace LiteDB.Studio
                     {
                         txtParameters.BindParameter(data);
                         data.IsParametersLoaded = true;
+                    } else if (tabResult.SelectedTab == tabImg)
+                    {
+                        imgBox.BackColor = Color.Gray;
+                        foreach(BsonValue result in data.Result) 
+                        {
+                            if (result.Type == BsonType.Document)
+                            {
+                                var resultDocs = result.AsDocument;
+                                foreach(var item in resultDocs)
+                                {
+                                    if (item.Value.Type == BsonType.String)
+                                    {
+                                        var x= item.Value;
+                                        string pattern = @"Image\((.*?)\)";
+                                        Match match = Regex.Match(x, pattern);
+                                        if (match.Success)
+                                        {
+                                            string path = match.Groups[1].Value;
+                                            if (File.Exists(path))
+                                            {
+                                                imgBox.Image = Image.FromFile(path);
+                                                return;
+                                            }
+                                        }
+                                    }
+                                   
+                                }
+
+                            }
+                        }
+                        
                     }
                 }
             }

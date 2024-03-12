@@ -276,7 +276,7 @@ namespace LiteDB.Studio
             // img PictureBox
             // 
             // 
-            imgBox.BackColor = Color.Black;
+          //  imgBox.BackColor = Color.Black;
             this.imgBox.SizeMode = PictureBoxSizeMode.StretchImage; // or use PictureBoxSizeMode.Zoom if you want to maintain aspect ratio
             this.imgBox.Size = new Size(100, 100);
             // txtResult

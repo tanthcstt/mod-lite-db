@@ -118,7 +118,6 @@ namespace LiteDB.Engine
                 if (value.Type == BsonType.String)
                 {
                     var docString = value.AsString;
-                    Console.WriteLine(docString);
                     Match match = Regex.Match(docString, pattern);
                     if (match.Success)
                     {
