@@ -264,7 +264,7 @@ namespace LiteDB.Studio
             // 
             // tabimg
             // 
-            this.tabImg.Controls.Add(this.imgBox);
+           // this.tabImg.Controls.Add(this.imgBox);
             this.tabImg.Location = new System.Drawing.Point(4, 22);
             this.tabImg.Name = "tabImages";
             this.tabImg.Padding = new System.Windows.Forms.Padding(3);
@@ -339,14 +339,7 @@ namespace LiteDB.Studio
             this.tabSql.Selected += new System.Windows.Forms.TabControlEventHandler(this.TabSql_Selected);
             this.tabSql.MouseClick += new System.Windows.Forms.MouseEventHandler(this.TabSql_MouseClick);
             this.tabSql.MouseDown += new System.Windows.Forms.MouseEventHandler(this.TabSql_MouseDown);
- /*           // 
-            // tabImg
-            // 
-            this.tabImg.Controls.Add(this.imgBox);
-            this.tabImg.Location = new System.Drawing.Point(0, 0);
-            this.tabImg.Name = "tabImg";
-            this.tabImg.Size = new System.Drawing.Size(200, 100);
-            this.tabImg.TabIndex = 0*/;
+
             // 
             // stbStatus
             // 

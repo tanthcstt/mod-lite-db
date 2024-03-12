@@ -377,6 +377,11 @@ namespace LiteDB.Studio
 
             task.WaitHandle.Dispose();
         }
+        int pictureBoxX = 10; // Initial X position of the PictureBox
+        int pictureBoxY = 10; // Initial Y position of the PictureBox
+        int pictureBoxWidth = 100; // Width of the PictureBox
+        int pictureBoxHeight = 100; // Height of the PictureBox
+        int spacing = 10; // Spacing between PictureBox controls
 
         private void LoadResult(TaskData data)
         {
@@ -437,11 +442,11 @@ namespace LiteDB.Studio
                             if (result.Type == BsonType.Document)
                             {
                                 var resultDocs = result.AsDocument;
-                                foreach(var item in resultDocs)
+                                foreach (var item in resultDocs)
                                 {
                                     if (item.Value.Type == BsonType.String)
                                     {
-                                        var x= item.Value;
+                                        var x = item.Value;
                                         string pattern = @"Image\((.*?)\)";
                                         Match match = Regex.Match(x, pattern);
                                         if (match.Success)
@@ -449,12 +454,28 @@ namespace LiteDB.Studio
                                             string path = match.Groups[1].Value;
                                             if (File.Exists(path))
                                             {
-                                                imgBox.Image = Image.FromFile(path);
-                                                return;
+                                                
+                                                PictureBox picture = new PictureBox();
+                                                picture.Size = new Size(pictureBoxWidth, pictureBoxHeight);
+                                                picture.SizeMode = PictureBoxSizeMode.StretchImage;
+                                                picture.Image = Image.FromFile(path);
+
+                                            
+                                                picture.Location = new Point(pictureBoxX, pictureBoxY);
+                                                pictureBoxX += pictureBoxWidth + spacing; 
+
+                                              
+                                                if (pictureBoxX + pictureBoxWidth > tabImg.Width)
+                                                {
+                                                    pictureBoxX = 10;
+                                                    pictureBoxY += pictureBoxHeight + spacing;
+                                                }
+
+                                              
+                                                tabImg.Controls.Add(picture);
                                             }
                                         }
                                     }
-                                   
                                 }
 
                             }
