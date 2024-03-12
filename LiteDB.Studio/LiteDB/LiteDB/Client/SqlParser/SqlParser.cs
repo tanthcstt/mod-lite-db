@@ -29,7 +29,11 @@ namespace LiteDB
         {
             var ahead = _tokenizer.LookAhead().Expect(TokenType.Word);
             LOG($"executing `{ahead.Value.ToUpper()}`", "SQL");
-         
+
+            Console.WriteLine(_engine);
+            Console.WriteLine(_tokenizer);
+            Console.WriteLine(_collation);
+            Console.WriteLine(_parameters.Values);
             switch (ahead.Value.ToUpper())
             {
                 case "SELECT":
@@ -38,6 +42,7 @@ namespace LiteDB
                 case "SELECT_IMAGE":
                     return this.ParseSelectImage();
                 case "INSERT": return this.ParseInsert();
+                case "INSERT_IMG": return this.ParseInsertImage();
                 case "DELETE": return this.ParseDelete();
                 case "UPDATE": return this.ParseUpdate();
                 case "DROP": return this.ParseDrop();

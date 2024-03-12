@@ -744,7 +744,9 @@ namespace LiteDB.Studio
             // set focus to result
             this.ActiveControl =
                 tabResult.SelectedTab == tabGrid ? (Control)grdResult :
-                tabResult.SelectedTab == tabText ? (Control)txtResult : (Control)txtParameters; 
+                tabResult.SelectedTab == tabText ? (Control)txtResult : 
+                tabResult.SelectedTab == tabImg ? (Control)tabImg :
+                (Control)txtParameters; 
         }
 
         private void TabSql_SelectedIndexChanged(object sender, EventArgs e)
