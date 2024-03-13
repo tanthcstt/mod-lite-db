@@ -1,4 +1,5 @@
-﻿using System.Drawing;
+﻿using System;
+using System.Drawing;
 using System.Windows.Forms;
 
 namespace LiteDB.Studio
@@ -42,6 +43,7 @@ namespace LiteDB.Studio
             this.tabGrid = new System.Windows.Forms.TabPage();
             this.grdResult = new System.Windows.Forms.DataGridView();
             this.tabText = new System.Windows.Forms.TabPage();
+            this.colorSorter = new ComboBox();  
 
             this.txtResult = new ICSharpCode.TextEditor.TextEditorControl();
             this.txtParameters = new ICSharpCode.TextEditor.TextEditorControl();
@@ -187,6 +189,7 @@ namespace LiteDB.Studio
             this.splitRight.Size = new System.Drawing.Size(953, 701);
             this.splitRight.SplitterDistance = 213;
             this.splitRight.TabIndex = 8;
+           
             // 
             // txtSql
             // 
@@ -415,6 +418,21 @@ namespace LiteDB.Studio
             this.tlbMain.TabIndex = 12;
             this.tlbMain.Text = "toolStrip";
             // 
+            // color sorter
+            // 
+            colorSorter = new ComboBox();
+            colorSorter.DropDownStyle = ComboBoxStyle.DropDownList;
+            colorSorter.FormattingEnabled = true;
+
+            int x = tabImg.Width - colorSorter.Width - 50;
+            int y = 10;
+            colorSorter.Location = new Point(x, y);
+            colorSorter.Size = new Size(150, 30);
+            colorSorter.Items.AddRange(new string[] { "Red", "Green", "Blue" });
+            colorSorter.SelectedIndexChanged += OnSelectColor;
+            colorSorter.SelectedIndex = 2;
+            tabImg.Controls.Add(colorSorter);
+            // 
             // recentDBsDropDownButton
             // 
             this.recentDBsDropDownButton.AutoToolTip = false;
@@ -500,12 +518,12 @@ namespace LiteDB.Studio
             // 
             // btnInsertImage
             // 
-            this.btnInsertImage.Image = global::LiteDB.Studio.Properties.Resources.resultset_next;
+            this.btnInsertImage.Image = global::LiteDB.Studio.Properties.Resources.Add_icon;
             this.btnInsertImage.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.btnInsertImage.Name = "btnInsertImage";
             this.btnInsertImage.Padding = new System.Windows.Forms.Padding(3);
             this.btnInsertImage.Size = new System.Drawing.Size(66, 30);
-            this.btnInsertImage.Text = "Insert";
+            this.btnInsertImage.Text = "Image";
             this.btnInsertImage.Click += new System.EventHandler(this.BtnInsertImage_Click);
             // 
             // toolStripSeparator7
@@ -821,6 +839,8 @@ namespace LiteDB.Studio
 
         }
 
+     
+
         private System.Windows.Forms.ToolStripButton btnBegin;
         private System.Windows.Forms.ToolStripButton btnCheckpoint;
         private System.Windows.Forms.ToolStripButton btnCommit;
@@ -882,6 +902,8 @@ namespace LiteDB.Studio
         private ICSharpCode.TextEditor.TextEditorControl txtResult;
         private ICSharpCode.TextEditor.TextEditorControl txtSql;
         private PictureBox imgBox;
+
+        private ComboBox colorSorter;
 
         #endregion
 

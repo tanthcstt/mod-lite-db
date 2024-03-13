@@ -63,6 +63,16 @@ namespace LiteDB.Studio.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap Add_icon {
+            get {
+                object obj = ResourceManager.GetObject("Add_icon", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap application_put {
             get {
                 object obj = ResourceManager.GetObject("application_put", resourceCulture);

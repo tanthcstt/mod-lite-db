@@ -15,7 +15,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using ICSharpCode.TextEditor.Util;
 using System.Text.RegularExpressions;
-
+using OpenCvSharp;
 namespace LiteDB.Studio
 {
     public partial class MainForm : Form
@@ -377,14 +377,17 @@ namespace LiteDB.Studio
 
             task.WaitHandle.Dispose();
         }
+        #region MODDED_FUNCTION
         int pictureBoxX = 10; // Initial X position of the PictureBox
         int pictureBoxY = 10; // Initial Y position of the PictureBox
         int pictureBoxWidth = 100; // Width of the PictureBox
         int pictureBoxHeight = 100; // Height of the PictureBox
         int spacing = 10; // Spacing between PictureBox controls
-
+        List<string> listPath = new List<string>();
+        int currentChannel = 0;
         private void LoadResult(TaskData data)
         {
+            listPath.Clear();
             if (data == null) return;
 
             btnRun.Enabled = !data.Executing;
@@ -394,7 +397,7 @@ namespace LiteDB.Studio
                 grdResult.Clear();
                 txtResult.Clear();
                 txtParameters.Clear();
-                imgBox.Image = null;    
+                imgBox.Image = null;
 
                 lblResultCount.Visible = false;
                 lblElapsed.Text = "Running";
@@ -406,10 +409,10 @@ namespace LiteDB.Studio
                 lblResultCount.Visible = true;
                 lblElapsed.Text = data.Elapsed.ToString();
                 prgRunning.Style = ProgressBarStyle.Blocks;
-                lblResultCount.Text = 
+                lblResultCount.Text =
                     data.Result == null ? "" :
                     data.Result.Count == 0 ? "no documents" :
-                    data.Result.Count  == 1 ? "1 document" : 
+                    data.Result.Count == 1 ? "1 document" :
                     data.Result.Count + (data.LimitExceeded ? "+" : "") + " documents";
 
                 if (data.Exception != null)
@@ -418,26 +421,27 @@ namespace LiteDB.Studio
                     txtParameters.BindErrorMessage(data.Sql, data.Exception);
                     grdResult.BindErrorMessage(data.Sql, data.Exception);
                 }
-                else if(data.Result != null)
+                else if (data.Result != null)
                 {
                     if (tabResult.SelectedTab == tabGrid && data.IsGridLoaded == false)
                     {
                         grdResult.BindBsonData(data);
                         data.IsGridLoaded = true;
                     }
-                    else if(tabResult.SelectedTab == tabText && data.IsTextLoaded == false)
+                    else if (tabResult.SelectedTab == tabText && data.IsTextLoaded == false)
                     {
                         txtResult.BindBsonData(data);
                         data.IsTextLoaded = true;
                     }
-                    else if(tabResult.SelectedTab == tabParameters && data.IsParametersLoaded == false)
+                    else if (tabResult.SelectedTab == tabParameters && data.IsParametersLoaded == false)
                     {
                         txtParameters.BindParameter(data);
                         data.IsParametersLoaded = true;
-                    } else if (tabResult.SelectedTab == tabImg)
+                    }
+                    else if (tabResult.SelectedTab == tabImg)
                     {
                         imgBox.BackColor = Color.Gray;
-                        foreach(BsonValue result in data.Result) 
+                        foreach (BsonValue result in data.Result)
                         {
                             if (result.Type == BsonType.Document)
                             {
@@ -452,39 +456,96 @@ namespace LiteDB.Studio
                                         if (match.Success)
                                         {
                                             string path = match.Groups[1].Value;
-                                            if (File.Exists(path))
-                                            {
-                                                
-                                                PictureBox picture = new PictureBox();
-                                                picture.Size = new Size(pictureBoxWidth, pictureBoxHeight);
-                                                picture.SizeMode = PictureBoxSizeMode.StretchImage;
-                                                picture.Image = Image.FromFile(path);
+                                            // ShowImg(path);
+                                            if (File.Exists(path)) { listPath.Add(path); }
 
-                                            
-                                                picture.Location = new Point(pictureBoxX, pictureBoxY);
-                                                pictureBoxX += pictureBoxWidth + spacing; 
-
-                                              
-                                                if (pictureBoxX + pictureBoxWidth > tabImg.Width)
-                                                {
-                                                    pictureBoxX = 10;
-                                                    pictureBoxY += pictureBoxHeight + spacing;
-                                                }
-
-                                              
-                                                tabImg.Controls.Add(picture);
-                                            }
                                         }
                                     }
                                 }
 
                             }
                         }
-                        
+                        var sortedListPath = SortImageByColor(listPath);
+                        ResetImgTab();
+                        foreach (var path in sortedListPath) { ShowImg(path); }
                     }
                 }
+
+
             }
         }
+        double CalculateScoreByChannel(Mat image, int channelIndex)
+        {
+            Mat[] channels = Cv2.Split(image);
+            Mat selectedChannel = channels[channelIndex];
+
+            Scalar meanScalar = Cv2.Mean(selectedChannel);
+            double score = meanScalar.Val0;
+
+            return score;
+        }
+
+        List<string> SortImageByColor(List<string> imagePaths)
+        {
+            List<Tuple<string, double>> colorScores = new List<Tuple<string, double>>();
+
+            foreach (string imagePath in imagePaths)
+            {
+                Mat img = Cv2.ImRead(imagePath);
+                double colorScore = CalculateScoreByChannel(img, currentChannel);
+                colorScores.Add(new Tuple<string, double>(imagePath, colorScore));
+            }
+
+            // Sort images based on the specified channel score
+            colorScores.Sort((x, y) => y.Item2.CompareTo(x.Item2)); // Descending order
+
+            return colorScores.ConvertAll(x => x.Item1); // Convert Tuple list to string list
+        }
+
+        private void ShowImg(string path)
+        {
+            if (File.Exists(path))
+            {
+
+                PictureBox picture = new PictureBox();
+                picture.Size = new System.Drawing.Size(pictureBoxWidth, pictureBoxHeight);
+                picture.SizeMode = PictureBoxSizeMode.StretchImage;
+                picture.Image = Image.FromFile(path);
+
+
+                picture.Location = new System.Drawing.Point(pictureBoxX, pictureBoxY);
+                pictureBoxX += pictureBoxWidth + spacing;
+
+
+                if (pictureBoxX + pictureBoxWidth > tabImg.Width)
+                {
+                    pictureBoxX = 10;
+                    pictureBoxY += pictureBoxHeight + spacing;
+                }
+
+
+                tabImg.Controls.Add(picture);
+            }
+        }
+
+        private void ResetImgTab()
+        {
+            tabImg.Controls.Clear();
+            pictureBoxX = 10; // Initial X position of the PictureBox
+            pictureBoxY = 10; //
+            /*for (int i = 0; i < tabImg.Controls.Count; i++)
+            {
+                if (tabImg.Controls[i] is PictureBox) {
+                tabImg.Controls.RemoveAt(i);
+                    tabImg.Controls[i].Dispose();         
+
+                }
+            }*/
+            tabImg.Controls.Add(colorSorter);   
+            
+        }
+        #endregion
+
 
         private void AddSqlSnippet(string sql)
         {
@@ -1073,6 +1134,33 @@ namespace LiteDB.Studio
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message, "Error on save", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void OnSelectColor(object sender, EventArgs e)
+        {
+            string selectedColor = colorSorter.SelectedItem.ToString();
+            switch (selectedColor)
+            {
+                case "Red":
+                    currentChannel = 2; // Red channel is at index 2
+                    break;
+                case "Green":
+                    currentChannel = 1; // Green channel is at index 1
+                    break;
+                case "Blue":
+                    currentChannel = 0; // blue channel is at index 0
+                    break;
+                default:
+                    // Handle default case if necessary
+                    break;
+            }
+
+            if (listPath.Count > 0) 
+            {
+                var sortedListPath = SortImageByColor(listPath);
+                ResetImgTab();
+                foreach (var path in sortedListPath) { ShowImg(path); }
             }
         }
     }
