@@ -22,3 +22,7 @@ The project may encounter errors if any directory contains Unicode characters.
 
    - Use the drop-down menu in the image result tab to sort images by color.
  - ![Screenshot 2024-03-13 112459](https://github.com/tanthcstt/mod-lite-db/assets/127326550/7e7ae1a6-a67c-4649-91f9-23ab42ec7a96)
+   ## 3.1 Open selected file
+   ![image](https://github.com/tanthcstt/mod-lite-db/assets/127326550/3fec47ec-2749-4cf4-b486-e8045a7090e7)
+   - path auto save in clipboard
+
