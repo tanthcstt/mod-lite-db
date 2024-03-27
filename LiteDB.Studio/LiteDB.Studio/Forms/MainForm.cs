@@ -1,21 +1,17 @@
-﻿using ICSharpCode.TextEditor;
-using LiteDB.Engine;
+﻿using ICSharpCode.TextEditor.Util;
 using LiteDB.Studio.Forms;
+using OpenCvSharp;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
 using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
-using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using ICSharpCode.TextEditor.Util;
-using System.Text.RegularExpressions;
-using OpenCvSharp;
 namespace LiteDB.Studio
 {
     public partial class MainForm : Form
@@ -467,7 +463,11 @@ namespace LiteDB.Studio
                         }
                         var sortedListPath = SortImageByColor(listPath);
                         ResetImgTab();
-                        foreach (var path in sortedListPath) { ShowImg(path); }
+                      //  foreach (var path in sortedListPath) { ShowImg(path); }
+                      for(int i = 0; i < sortedListPath.Count; i++)
+                        {
+                            ShowImg(sortedListPath[i], i);
+                        }
                     }
                 }
 
@@ -499,10 +499,11 @@ namespace LiteDB.Studio
             // Sort images based on the specified channel score
             colorScores.Sort((x, y) => y.Item2.CompareTo(x.Item2)); // Descending order
 
+         
             return colorScores.ConvertAll(x => x.Item1); // Convert Tuple list to string list
         }
 
-        private void ShowImg(string path)
+        private void ShowImg(string path, int index)
         {
             if (File.Exists(path))
             {
@@ -511,8 +512,8 @@ namespace LiteDB.Studio
                 picture.Size = new System.Drawing.Size(pictureBoxWidth, pictureBoxHeight);
                 picture.SizeMode = PictureBoxSizeMode.StretchImage;
                 picture.Image = Image.FromFile(path);
-
-
+                picture.Click += ImgBox_Click;
+                picture.Tag = path;
                 picture.Location = new System.Drawing.Point(pictureBoxX, pictureBoxY);
                 pictureBoxX += pictureBoxWidth + spacing;
 
@@ -526,6 +527,23 @@ namespace LiteDB.Studio
 
                 tabImg.Controls.Add(picture);
             }
+        }
+        private void ImgBox_Click(object sender, EventArgs e)
+        {
+            string path = (string)((PictureBox)sender).Tag;
+
+        
+            MessageBox.Show($"Open file: {path}");
+            try
+            {
+                Process.Start(path);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error opening file: {ex.Message}");
+            }
+
+            Clipboard.SetText(path);
         }
 
         private void ResetImgTab()
@@ -1160,7 +1178,11 @@ namespace LiteDB.Studio
             {
                 var sortedListPath = SortImageByColor(listPath);
                 ResetImgTab();
-                foreach (var path in sortedListPath) { ShowImg(path); }
+             //   foreach (var path in sortedListPath) { ShowImg(path); }
+                for (int i = 0;i < sortedListPath.Count; i++)
+                {
+                    ShowImg(sortedListPath[i], i);
+                }
             }
         }
     }
