@@ -530,20 +530,29 @@ namespace LiteDB.Studio
         }
         private void ImgBox_Click(object sender, EventArgs e)
         {
+            // Getting the file path from the Tag property of the PictureBox
             string path = (string)((PictureBox)sender).Tag;
 
-        
-            MessageBox.Show($"Open file: {path}");
-            try
-            {
-                Process.Start(path);
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"Error opening file: {ex.Message}");
-            }
+            // Showing a message box with the file path
+            DialogResult result = MessageBox.Show($"Open file: {path}", "Confirmation", MessageBoxButtons.OKCancel);
 
-            Clipboard.SetText(path);
+            // Check if the user clicked "OK"
+            if (result == DialogResult.OK)
+            {
+                try
+                {
+                    // Attempting to start the process associated with the given file
+                    Process.Start(path);
+                }
+                catch (Exception ex)
+                {
+                    // Showing an error message if opening the file fails
+                    MessageBox.Show($"Error opening file: {ex.Message}");
+                }
+
+                // Copying the file path to the clipboard
+                Clipboard.SetText(path);
+            }
         }
 
         private void ResetImgTab()
