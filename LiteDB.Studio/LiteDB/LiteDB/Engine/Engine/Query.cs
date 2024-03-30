@@ -18,7 +18,7 @@ namespace LiteDB.Engine
             if (query == null) throw new ArgumentNullException(nameof(query));
 
             IEnumerable<BsonDocument> source = null;
-
+            //select $ from TestImg where name="fff"
             // test if is an system collection
             if (collection.StartsWith("$"))
             {

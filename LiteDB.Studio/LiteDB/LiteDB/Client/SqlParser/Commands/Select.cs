@@ -175,8 +175,12 @@ namespace LiteDB
 
             // read eof/;
             _tokenizer.ReadToken().Expect(TokenType.EOF, TokenType.SemiColon);
+
+           
             return _engine.Query(collection, query);
         }
+
+       
         private IBsonDataReader ParseSelectImage()
         {
             // initialize query definition
@@ -242,9 +246,15 @@ namespace LiteDB
                 // read WHERE keyword
                 _tokenizer.ReadToken();
 
-                var where = BsonExpression.Create(_tokenizer, BsonExpressionParserMode.Full, _parameters);
+               var where = BsonExpression.Create(_tokenizer, BsonExpressionParserMode.Full, _parameters);
 
-                query.Where.Add(where);
+                //    query.Where.Add(where);
+
+                // GET IMG DESCRIPTION HERE
+                string s = _tokenizer.Current.Value;
+                query.ImageDescription = s; 
+            
+
             }
 
             ahead = _tokenizer.LookAhead().Expect(TokenType.Word, TokenType.EOF, TokenType.SemiColon);

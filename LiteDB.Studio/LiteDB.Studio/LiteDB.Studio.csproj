@@ -17,7 +17,7 @@
     <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
+    <PlatformTarget>x64</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -25,6 +25,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -39,14 +40,38 @@
     <ApplicationIcon>LiteDB.Studio.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="IronPython, Version=3.4.1.0, Culture=neutral, PublicKeyToken=7f709c5b713576e1, processorArchitecture=MSIL">
+      <HintPath>..\packages\IronPython.3.4.1\lib\net462\IronPython.dll</HintPath>
+    </Reference>
+    <Reference Include="IronPython.Modules, Version=3.4.1.0, Culture=neutral, PublicKeyToken=7f709c5b713576e1, processorArchitecture=MSIL">
+      <HintPath>..\packages\IronPython.3.4.1\lib\net462\IronPython.Modules.dll</HintPath>
+    </Reference>
+    <Reference Include="IronPython.SQLite, Version=3.4.1.0, Culture=neutral, PublicKeyToken=7f709c5b713576e1, processorArchitecture=MSIL">
+      <HintPath>..\packages\IronPython.3.4.1\lib\net462\IronPython.SQLite.dll</HintPath>
+    </Reference>
+    <Reference Include="IronPython.Wpf, Version=3.4.1.0, Culture=neutral, PublicKeyToken=7f709c5b713576e1, processorArchitecture=MSIL">
+      <HintPath>..\packages\IronPython.3.4.1\lib\net462\IronPython.Wpf.dll</HintPath>
+    </Reference>
     <Reference Include="LiteDB">
-      <HintPath>..\LiteDB\LiteDB\bin\Debug\net4.5\LiteDB.dll</HintPath>
+      <HintPath>..\LiteDB\LiteDB\bin\Debug\net4.7.2\LiteDB.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Dynamic, Version=1.3.4.0, Culture=neutral, PublicKeyToken=7f709c5b713576e1, processorArchitecture=MSIL">
+      <HintPath>..\packages\DynamicLanguageRuntime.1.3.4\lib\net452\Microsoft.Dynamic.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Scripting, Version=1.3.4.0, Culture=neutral, PublicKeyToken=7f709c5b713576e1, processorArchitecture=MSIL">
+      <HintPath>..\packages\DynamicLanguageRuntime.1.3.4\lib\net452\Microsoft.Scripting.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Scripting.Metadata, Version=1.3.4.0, Culture=neutral, PublicKeyToken=7f709c5b713576e1, processorArchitecture=MSIL">
+      <HintPath>..\packages\DynamicLanguageRuntime.1.3.4\lib\net452\Microsoft.Scripting.Metadata.dll</HintPath>
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.13.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="OpenCvSharp, Version=1.0.0.0, Culture=neutral, PublicKeyToken=6adad1e807fea099, processorArchitecture=MSIL">
       <HintPath>..\packages\OpenCvSharp4.4.9.0.20240103\lib\netstandard2.0\OpenCvSharp.dll</HintPath>
+    </Reference>
+    <Reference Include="Python.Runtime, Version=3.7.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Python.Runtime.NETStandard.3.7.1\lib\netstandard2.0\Python.Runtime.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Buffers, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
@@ -362,6 +387,107 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="ILMergeOrder.txt" />
+    <Content Include="lib\mailbox.py" />
+    <Content Include="lib\mailcap.py" />
+    <Content Include="lib\mimetypes.py" />
+    <Content Include="lib\modulefinder.py" />
+    <Content Include="lib\netrc.py" />
+    <Content Include="lib\nntplib.py" />
+    <Content Include="lib\ntpath.py" />
+    <Content Include="lib\nturl2path.py" />
+    <Content Include="lib\numbers.py" />
+    <Content Include="lib\opcode.py" />
+    <Content Include="lib\operator.py" />
+    <Content Include="lib\optparse.py" />
+    <Content Include="lib\os.py" />
+    <Content Include="lib\pathlib.py" />
+    <Content Include="lib\pdb.py" />
+    <Content Include="lib\pickle.py" />
+    <Content Include="lib\pickletools.py" />
+    <Content Include="lib\pipes.py" />
+    <Content Include="lib\pkgutil.py" />
+    <Content Include="lib\platform.py" />
+    <Content Include="lib\plistlib.py" />
+    <Content Include="lib\poplib.py" />
+    <Content Include="lib\posixpath.py" />
+    <Content Include="lib\pprint.py" />
+    <Content Include="lib\profile.py" />
+    <Content Include="lib\pstats.py" />
+    <Content Include="lib\pty.py" />
+    <Content Include="lib\pyclbr.py" />
+    <Content Include="lib\pydoc.py" />
+    <Content Include="lib\py_compile.py" />
+    <Content Include="lib\queue.py" />
+    <Content Include="lib\quopri.py" />
+    <Content Include="lib\random.py" />
+    <Content Include="lib\re.py" />
+    <Content Include="lib\reprlib.py" />
+    <Content Include="lib\rlcompleter.py" />
+    <Content Include="lib\runpy.py" />
+    <Content Include="lib\sched.py" />
+    <Content Include="lib\selectors.py" />
+    <Content Include="lib\shelve.py" />
+    <Content Include="lib\shlex.py" />
+    <Content Include="lib\shutil.py" />
+    <Content Include="lib\site.py" />
+    <Content Include="lib\smtpd.py" />
+    <Content Include="lib\smtplib.py" />
+    <Content Include="lib\sndhdr.py" />
+    <Content Include="lib\socket.py" />
+    <Content Include="lib\socketserver.py" />
+    <Content Include="lib\sre_compile.py" />
+    <Content Include="lib\sre_constants.py" />
+    <Content Include="lib\sre_parse.py" />
+    <Content Include="lib\ssl.py" />
+    <Content Include="lib\stat.py" />
+    <Content Include="lib\statistics.py" />
+    <Content Include="lib\string.py" />
+    <Content Include="lib\stringprep.py" />
+    <Content Include="lib\struct.py" />
+    <Content Include="lib\subprocess.py" />
+    <Content Include="lib\sunau.py" />
+    <Content Include="lib\symbol.py" />
+    <Content Include="lib\symtable.py" />
+    <Content Include="lib\sysconfig.py" />
+    <Content Include="lib\tabnanny.py" />
+    <Content Include="lib\tarfile.py" />
+    <Content Include="lib\telnetlib.py" />
+    <Content Include="lib\tempfile.py" />
+    <Content Include="lib\textwrap.py" />
+    <Content Include="lib\this.py" />
+    <Content Include="lib\threading.py" />
+    <Content Include="lib\timeit.py" />
+    <Content Include="lib\token.py" />
+    <Content Include="lib\tokenize.py" />
+    <Content Include="lib\trace.py" />
+    <Content Include="lib\traceback.py" />
+    <Content Include="lib\tracemalloc.py" />
+    <Content Include="lib\tty.py" />
+    <Content Include="lib\turtle.py" />
+    <Content Include="lib\types.py" />
+    <Content Include="lib\typing.py" />
+    <Content Include="lib\uu.py" />
+    <Content Include="lib\uuid.py" />
+    <Content Include="lib\warnings.py" />
+    <Content Include="lib\wave.py" />
+    <Content Include="lib\weakref.py" />
+    <Content Include="lib\webbrowser.py" />
+    <Content Include="lib\wpf.py" />
+    <Content Include="lib\xdrlib.py" />
+    <Content Include="lib\zipfile.py" />
+    <Content Include="lib\_bootlocale.py" />
+    <Content Include="lib\_collections_abc.py" />
+    <Content Include="lib\_compat_pickle.py" />
+    <Content Include="lib\_dummy_thread.py" />
+    <Content Include="lib\_markupbase.py" />
+    <Content Include="lib\_osx_support.py" />
+    <Content Include="lib\_pyio.py" />
+    <Content Include="lib\_sitebuiltins.py" />
+    <Content Include="lib\_strptime.py" />
+    <Content Include="lib\_threading_local.py" />
+    <Content Include="lib\_weakrefset.py" />
+    <Content Include="lib\__future__.py" />
+    <Content Include="lib\__phello__.foo.py" />
     <Content Include="LiteDB.Studio.ico" />
     <None Include="Resources\folder_page.png" />
     <Content Include="Resources\load_last_db.png" />

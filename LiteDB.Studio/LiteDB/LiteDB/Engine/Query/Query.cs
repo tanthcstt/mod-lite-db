@@ -17,6 +17,7 @@ namespace LiteDB
         public List<BsonExpression> Includes { get; } = new List<BsonExpression>();
         public List<BsonExpression> Where { get; } = new List<BsonExpression>();
 
+        public string ImageDescription = "";
         public BsonExpression OrderBy { get; set; } = null;
         public int Order { get; set; } = Query.Ascending;
 

@@ -1,7 +1,12 @@
-﻿using System;
+﻿
+using Python.Runtime;
+using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Text.RegularExpressions;
 using static LiteDB.Constants;
+
 
 namespace LiteDB.Engine
 {
@@ -60,19 +65,79 @@ namespace LiteDB.Engine
                 return this.ExecuteQueryInto(_query.Into, _query.IntoAutoId);
             }
         }
-
+       
         /// <summary>
         /// Run query definition into engine. Execute optimization to get query planner
         /// </summary>
+        /// 
         internal BsonDataReader ExecuteQuery(bool executionPlan)
         {
-            // get current transaction (if contains a explicit transaction) or a query-only transaction
             var transaction = _monitor.GetTransaction(true, true, out var isNew);
 
             transaction.OpenCursors.Add(_cursor);
+            var result = RunQuery();
 
-            // return new BsonDataReader with IEnumerable source
-            return new BsonDataReader(RunQuery(), _collection, _state);
+            if (_query.ImageDescription != "")
+            {
+                IEnumerator<BsonDocument> enumerator = result.GetEnumerator();
+                bool read = enumerator.MoveNext();
+                Console.WriteLine(enumerator);
+                List<BsonDocument> listDoc = new List<BsonDocument>();
+
+                string pattern = @"Image\((.*?)\)";
+
+                // all value - path
+                Dictionary<BsonDocument, string> dic = new Dictionary<BsonDocument, string>();
+                List<string> listPath = new List<string>(); 
+
+                while (read)
+                {
+                    listDoc.Add(enumerator.Current);
+                    read = enumerator.MoveNext();
+                }
+
+
+                foreach (var item in listDoc)
+                {
+                    foreach (var doc in item)
+                    {
+
+                        Match match = Regex.Match(doc.Value.ToString(), pattern);
+                        if (match.Success)
+                        {
+                            string imageString = match.Groups[1].Value;
+                            listPath.Add(imageString);
+                            dic.Add(item, imageString);
+                        }
+
+                    }
+                }
+
+                string pythonDll = @"C:\Users\ASUS\AppData\Local\Programs\Python\Python37\python37.dll";
+                Environment.SetEnvironmentVariable("PYTHONNET_PYDLL", pythonDll);
+                PythonEngine.Initialize();
+
+                using (Py.GIL())
+                {
+                    dynamic sys = Py.Import("sys");
+                    dynamic sysPath = sys.path;
+                    sysPath.append(@"D:\"); // Adjust the path if needed
+
+                    // Now import the module
+                    dynamic visionapi = Py.Import("visionapi");
+
+                    // Use the module as needed
+                }
+
+                // Shutdown Python runtime
+                PythonEngine.Shutdown();
+
+                return new BsonDataReader(listDoc, _collection, _state);
+
+            } else
+            {
+                return new BsonDataReader(RunQuery(), _collection, _state);
+            }
 
             IEnumerable<BsonDocument> RunQuery()
             {

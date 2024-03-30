@@ -66,6 +66,31 @@ namespace LiteDB
             }
         }
 
+        internal BsonDataReader(IEnumerable<BsonValue> values, string collection, EngineState state,string fillter)
+        {
+            _collection = collection;
+            _source = values.GetEnumerator();
+            _state = state;
+            IEnumerator<BsonValue> test = values.GetEnumerator();   
+            test.MoveNext(); 
+            Console.WriteLine(values);
+            try
+            {
+                _state.Validate();
+
+                if (_source.MoveNext())
+                {
+                    _hasValues = _isFirst = true;
+                    _current = _source.Current;
+                }
+            }
+            catch (Exception ex)
+            {
+                _state.Handle(ex);
+                throw;
+            }
+          
+        }
         /// <summary>
         /// Return if has any value in result
         /// </summary>

@@ -26,3 +26,5 @@ The project may encounter errors if any directory contains Unicode characters.
    ![image](https://github.com/tanthcstt/mod-lite-db/assets/127326550/3fec47ec-2749-4cf4-b486-e8045a7090e7)
    - path auto save in clipboard
 
+### all syntax
+select_image $ from TestImg where ddddddddddd;

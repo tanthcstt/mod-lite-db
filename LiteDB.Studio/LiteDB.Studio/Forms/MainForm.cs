@@ -1,6 +1,7 @@
 ﻿using ICSharpCode.TextEditor.Util;
 using LiteDB.Studio.Forms;
 using OpenCvSharp;
+using OpenCvSharp.XFeatures2D;
 using System;
 using System.Collections.Generic;
 using System.Data;
