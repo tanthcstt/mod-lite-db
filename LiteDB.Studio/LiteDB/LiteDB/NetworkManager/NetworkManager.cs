@@ -38,7 +38,7 @@ namespace LiteDB
             var queryString = HttpUtility.ParseQueryString(string.Empty);
 
             // Request headers
-            client.DefaultRequestHeaders.Add("Ocp-Apim-Subscription-Key", "ec7c7b19b0da4b8d9cf6566621672dc0");
+            client.DefaultRequestHeaders.Add("Ocp-Apim-Subscription-Key", "");
 
             // Request parameters
             queryString["features"] = "tags";
