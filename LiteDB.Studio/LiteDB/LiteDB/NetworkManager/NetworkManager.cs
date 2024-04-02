@@ -58,7 +58,7 @@ namespace LiteDB
             var queryString = HttpUtility.ParseQueryString(string.Empty);
 
             // Request headers
-            client.DefaultRequestHeaders.Add("Ocp-Apim-Subscription-Key", "dc6fb8cc97d449ada0231de2ed93d498");
+            client.DefaultRequestHeaders.Add("Ocp-Apim-Subscription-Key", "");
             queryString["model-version"] = "2022-04-11";
             //  queryString["smartcrops-aspect-ratios"] = "{string}";
            // queryString["gender-neutral-caption"] = "False";
@@ -104,7 +104,7 @@ namespace LiteDB
 
             var queryStringnew = HttpUtility.ParseQueryString(string.Empty);
                queryStringnew["model-version"] = "2023-04-15";
-            client.DefaultRequestHeaders.Add("Ocp-Apim-Subscription-Key", "dc6fb8cc97d449ada0231de2ed93d498");
+            client.DefaultRequestHeaders.Add("Ocp-Apim-Subscription-Key", "");
             var uriNew = "https://imagelabel.cognitiveservices.azure.com/computervision/retrieval:vectorizeText?api-version=2023-02-01-preview&model-version=2022-04-11";
                 string p = "{\"text\": \"A man hold a kinfe\"}";
             byte[] prompt = Encoding.UTF8.GetBytes(p);
