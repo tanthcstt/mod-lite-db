@@ -30,10 +30,7 @@ namespace LiteDB
             var ahead = _tokenizer.LookAhead().Expect(TokenType.Word);
             LOG($"executing `{ahead.Value.ToUpper()}`", "SQL");
 
-            Console.WriteLine(_engine);
-            Console.WriteLine(_tokenizer);
-            Console.WriteLine(_collation);
-            Console.WriteLine(_parameters.Values);
+           
             switch (ahead.Value.ToUpper())
             {
                 case "SELECT":

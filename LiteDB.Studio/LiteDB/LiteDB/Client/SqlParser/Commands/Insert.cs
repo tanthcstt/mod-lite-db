@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 using LiteDB.Engine;
 using static LiteDB.Constants;
 
@@ -47,7 +49,41 @@ namespace LiteDB
             // will validate EOF or ;
             var docs = this.ParseListOfDocuments();
 
+      
             var result = _engine.Insert(collection, docs, autoId);
+
+
+         /*   string pattern = @"Image\((.*?)\)";
+
+            if (result == 1)
+            {
+                IEnumerator<BsonDocument> enumerator = docs.GetEnumerator();
+                bool read = enumerator.Current;
+                List<BsonDocument> listDoc = new List<BsonDocument>();
+                string path = "";
+                while (read)
+                {
+                    listDoc.Add(enumerator.Current);
+                    read = enumerator.MoveNext();
+                }
+
+                foreach (var item in listDoc)
+                {
+                    foreach (var doc in item)
+                    {
+
+                        Match match = Regex.Match(doc.Value.ToString(), pattern);
+                        if (match.Success)
+                        {
+                            string imageString = match.Groups[1].Value;
+                            path = imageString;
+                            break;
+                        }
+
+                    }
+                }
+
+            }*/
 
             return new BsonDataReader(result);
         }

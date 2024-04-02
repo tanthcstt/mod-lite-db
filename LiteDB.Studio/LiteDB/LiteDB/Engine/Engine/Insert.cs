@@ -99,19 +99,32 @@ namespace LiteDB.Engine
         /// test insert image, save image to path , TODO: SAVE IMG BY BSON
         /// </summary>
         /// <param name="path"></param>
-        private void OnInsertImage(string path)
+        private void OnInsertImage(string path, string id)
         {
-       
+
+     
+            // save image
+
             string saveDirectory =Path.GetDirectoryName(ConnectionManager.GetInstance().ConnectionString.Filename);
             saveDirectory = Path.Combine(saveDirectory, "Images");
             byte[] imageBytes = File.ReadAllBytes(path);
             File.WriteAllBytes(Path.Combine(saveDirectory, Path.GetFileName(path)), imageBytes);
 
+            // vectorize and save for retrieval
+
+
+            NetworkManager.GetInstance().Vectorizer(VectorizeDataType.Image, id,path);
+
 
         }
 
-        private bool IsImage(BsonDocument doc, Action<string> callback = null)
+        private bool IsImage(BsonDocument doc, Action<string, string> callback = null)
         {
+            List<string> keylist = doc.Keys.ToList();
+            int index = keylist.IndexOf("_id");
+            string id = doc.Values.ToList()[index].ToString();
+            Console.Write(id);
+
             string pattern = @"Image\((.*?)\)";
             foreach (BsonValue value in doc.Values)
             {
@@ -123,7 +136,7 @@ namespace LiteDB.Engine
                     {
                         // Extract the path
                         string path = match.Groups[1].Value;
-                        callback?.Invoke(path); 
+                        callback?.Invoke(path,id); 
                         return true;
                     }
                 }
