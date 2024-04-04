@@ -27,8 +27,13 @@ The project may encounter errors if any directory contains Unicode characters.
    - path auto save in clipboard
 
 ### all syntax
-select_image $ from TestImg where "A Dog";
 
 
-insert_img into TestImg values {aa:"Image(D:\\Green.png)"};
 insert_img into TestImg values {bb:"Image(D:\\dog.jpg)"};
+insert_img into TestImg values {aa:"Image(D:\\Green.png)"};
+insert_img into TestImg values {aa:"Image(D:\\apple.jpg)"};
+insert_img into TestImg values {aa:"Image(D:\\or.jpg)"};
+
+select_image $ from TestImg where "An Apple";
+
+select_image $ from TestImg where "An Apple" limit 2;

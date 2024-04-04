@@ -123,14 +123,14 @@ namespace LiteDB.Engine
                 }
 
                 // NetworkManager.GetInstance().MakeRequest();
-                NetworkManager.GetInstance().Vectorizer(VectorizeDataType.Text, _query.ImageDescription);
+                NetworkManager.GetInstance().Vectorizer(VectorizeDataType.Text, _query.ImageDescription,null,_collection).Wait() ;
 
                 while(NetworkManager.GetInstance().VectorizerDone == false)
                 {
                     Console.WriteLine("saa");
                 }
 
-                return new BsonDataReader(NetworkManager.GetInstance().ImageRetrieval(listDoc), _collection, _state);
+                return new BsonDataReader(NetworkManager.GetInstance().ImageRetrieval(listDoc,_query), _collection, _state);
 
             } else
             {

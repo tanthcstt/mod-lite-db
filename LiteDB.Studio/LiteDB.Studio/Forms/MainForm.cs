@@ -462,12 +462,12 @@ namespace LiteDB.Studio
 
                             }
                         }
-                        var sortedListPath = SortImageByColor(listPath);
+                    //    var sortedListPath = SortImageByColor(listPath);
                         ResetImgTab();
                       //  foreach (var path in sortedListPath) { ShowImg(path); }
-                      for(int i = 0; i < sortedListPath.Count; i++)
+                      for(int i = 0; i < listPath.Count; i++)
                         {
-                            ShowImg(sortedListPath[i], i);
+                            ShowImg(listPath[i], i);
                         }
                     }
                 }
@@ -569,7 +569,7 @@ namespace LiteDB.Studio
 
                 }
             }*/
-            tabImg.Controls.Add(colorSorter);   
+         //   tabImg.Controls.Add(colorSorter);   
             
         }
         #endregion
@@ -1165,7 +1165,7 @@ namespace LiteDB.Studio
             }
         }
 
-        private void OnSelectColor(object sender, EventArgs e)
+        /*private void OnSelectColor(object sender, EventArgs e)
         {
             string selectedColor = colorSorter.SelectedItem.ToString();
             switch (selectedColor)
@@ -1194,6 +1194,6 @@ namespace LiteDB.Studio
                     ShowImg(sortedListPath[i], i);
                 }
             }
-        }
+        }*/
     }
 }

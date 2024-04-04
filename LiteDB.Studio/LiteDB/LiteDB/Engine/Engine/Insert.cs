@@ -39,7 +39,7 @@ namespace LiteDB.Engine
 
                     this.InsertDocument(snapshot, doc, autoId, indexer, data);
                     
-                    var x = IsImage(doc, OnInsertImage);   
+                    var x = IsImage(doc, collection,OnInsertImage);   
                     Console.WriteLine(x);
                     count++;
                 }
@@ -99,7 +99,7 @@ namespace LiteDB.Engine
         /// test insert image, save image to path , TODO: SAVE IMG BY BSON
         /// </summary>
         /// <param name="path"></param>
-        private void OnInsertImage(string path, string id)
+        private void OnInsertImage(string path, string id,string collection)
         {
 
      
@@ -113,12 +113,12 @@ namespace LiteDB.Engine
             // vectorize and save for retrieval
 
 
-            NetworkManager.GetInstance().Vectorizer(VectorizeDataType.Image, id,path);
+            NetworkManager.GetInstance().Vectorizer(VectorizeDataType.Image, id, path,collection).Wait();
 
 
         }
 
-        private bool IsImage(BsonDocument doc, Action<string, string> callback = null)
+        private bool IsImage(BsonDocument doc,string collection, Action<string, string,string> callback = null)
         {
             List<string> keylist = doc.Keys.ToList();
             int index = keylist.IndexOf("_id");
@@ -136,7 +136,7 @@ namespace LiteDB.Engine
                     {
                         // Extract the path
                         string path = match.Groups[1].Value;
-                        callback?.Invoke(path,id); 
+                        callback?.Invoke(path,id,collection); 
                         return true;
                     }
                 }

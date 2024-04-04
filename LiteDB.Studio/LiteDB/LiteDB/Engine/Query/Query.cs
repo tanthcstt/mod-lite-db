@@ -26,6 +26,7 @@ namespace LiteDB
 
         public int Offset { get; set; } = 0;
         public int Limit { get; set; } = int.MaxValue;
+        public int ImageLimit { get; set; } = int.MaxValue; 
         public bool ForUpdate { get; set; } = false;
 
         public string Into { get; set; }

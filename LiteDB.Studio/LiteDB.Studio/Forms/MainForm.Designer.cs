@@ -43,7 +43,7 @@ namespace LiteDB.Studio
             this.tabGrid = new System.Windows.Forms.TabPage();
             this.grdResult = new System.Windows.Forms.DataGridView();
             this.tabText = new System.Windows.Forms.TabPage();
-            this.colorSorter = new ComboBox();  
+          //  this.colorSorter = new ComboBox();  
 
             this.txtResult = new ICSharpCode.TextEditor.TextEditorControl();
             this.txtParameters = new ICSharpCode.TextEditor.TextEditorControl();
@@ -420,18 +420,18 @@ namespace LiteDB.Studio
             // 
             // color sorter
             // 
-            colorSorter = new ComboBox();
+           /* colorSorter = new ComboBox();
             colorSorter.DropDownStyle = ComboBoxStyle.DropDownList;
-            colorSorter.FormattingEnabled = true;
+            colorSorter.FormattingEnabled = true;*/
 
-            int x = tabImg.Width - colorSorter.Width - 50;
+          /*  int x = tabImg.Width - colorSorter.Width - 50;
             int y = 10;
             colorSorter.Location = new Point(x, y);
             colorSorter.Size = new Size(150, 30);
             colorSorter.Items.AddRange(new string[] { "Red", "Green", "Blue" });
             colorSorter.SelectedIndexChanged += OnSelectColor;
             colorSorter.SelectedIndex = 2;
-            tabImg.Controls.Add(colorSorter);
+            tabImg.Controls.Add(colorSorter);*/
             // 
             // recentDBsDropDownButton
             // 
@@ -903,7 +903,7 @@ namespace LiteDB.Studio
         private ICSharpCode.TextEditor.TextEditorControl txtSql;
         private PictureBox imgBox;
 
-        private ComboBox colorSorter;
+      //  private ComboBox colorSorter;
 
         #endregion
 

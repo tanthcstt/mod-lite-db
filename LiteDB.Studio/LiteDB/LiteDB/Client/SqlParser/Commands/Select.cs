@@ -312,7 +312,7 @@ namespace LiteDB
                 _tokenizer.ReadToken();
                 var limit = _tokenizer.ReadToken().Expect(TokenType.Int).Value;
 
-                query.Limit = Convert.ToInt32(limit);
+                query.ImageLimit = Convert.ToInt32(limit);
             }
 
             ahead = _tokenizer.LookAhead().Expect(TokenType.Word, TokenType.EOF, TokenType.SemiColon);

@@ -34,6 +34,7 @@ namespace LiteDB
         private float[] DesVT = new float[] { };
         private bool isLoaded = false;
         public bool VectorizerDone = false;
+        private string API_Key = "";
         // Private constructor to prevent instantiation
         private NetworkManager()
         {
@@ -50,7 +51,7 @@ namespace LiteDB
             }
             return _instance;
         }
-        public  async void MakeRequest()
+       /* public  async void MakeRequest()
         {
             float[] vectorImg = new float[] { };
             float[] vectorTxt = new float[] { };    
@@ -135,7 +136,7 @@ namespace LiteDB
             Console.WriteLine(vectorTxt.Length);
             float confident = GetCosineSimilarity(vectorTxt, vectorImg);
             Console.WriteLine($"{confident}");  
-        }
+        }*/
 
         public  float GetCosineSimilarity(float[] vector1, float[] vector2)
         {
@@ -164,12 +165,15 @@ namespace LiteDB
         }
 
         //load vector file from folder
-        public void LoadVector()
+        public void LoadVector(string collection)
         {
             if (isLoaded) return;
 
-            string folderPath = @"D:\tets\mod-lite-db\test\Vectorize";
-             var listFilePath =    GetFileList(folderPath);
+            //   string folderPath = @"D:\tets\mod-lite-db\test\Vectorize";
+            string saveDirectory = Path.GetDirectoryName(ConnectionManager.GetInstance().ConnectionString.Filename);
+            saveDirectory = Path.Combine(saveDirectory, "Vectorize",collection);
+          
+            var listFilePath =    GetFileList(saveDirectory);
             for (int i = 0; i < listFilePath.Count; i++)
             {
                 float[] floatArr = LoadFloatArrayFromTextFile(listFilePath[i]);
@@ -189,18 +193,18 @@ namespace LiteDB
 
 
 
-        public async void Vectorizer(VectorizeDataType type, string idOrTxtdes ="", string path ="", object param = null)
+        public async Task Vectorizer(VectorizeDataType type, string idOrTxtdes ="", string path ="", object param = null)
         {
             VectorizerDone = false;
             float[] vtResult = new float[] { };
             var client = new HttpClient();
             var queryString = HttpUtility.ParseQueryString(string.Empty);
             queryString["model-version"] = "2022-04-11";
-            client.DefaultRequestHeaders.Add("Ocp-Apim-Subscription-Key", "");
+            client.DefaultRequestHeaders.Add("Ocp-Apim-Subscription-Key", API_Key);
             string endPoint = "imagelabel.cognitiveservices.azure.com";
             HttpResponseMessage response;
 
-            //INSERT 
+            //INSERT @"
             if (type == VectorizeDataType.Image)
             {
                 var uri = $"https://{endPoint}/computervision/retrieval:vectorizeImage?api-version=2023-02-01-preview&" + queryString;
@@ -231,10 +235,18 @@ namespace LiteDB
                         if (!ImageVector.ContainsKey(id))
                         {
                             ImageVector.Add(id, vtResult.ToList());
-                        //    string ID = ExtractID(idOrTxtdes);  
+                            //    string ID = ExtractID(idOrTxtdes);  
+                            string saveDirectory = Path.GetDirectoryName(ConnectionManager.GetInstance().ConnectionString.Filename);
+                            saveDirectory = Path.Combine(saveDirectory, "Vectorize",(string)param);
+                            if (!Directory.Exists(saveDirectory))
+                            {
+                                // If not, create it
+                                Directory.CreateDirectory(saveDirectory);
+                                Console.WriteLine("Folder created successfully.");
+                            }
 
                             //save to file
-                            string filePath = Path.Combine(@"D:\tets\mod-lite-db\test\Vectorize", id + ".txt");
+                            string filePath = Path.Combine(saveDirectory, id + ".txt");
 
                             SaveFloatArrayToTextFile(vtResult, filePath);
                         }
@@ -250,7 +262,7 @@ namespace LiteDB
             {
                 //load data
 
-                LoadVector();
+                LoadVector((string)param);
 
                 var uri = $"https://{endPoint}/computervision/retrieval:vectorizeText?api-version=2023-02-01-preview&" + queryString;
                 string des = idOrTxtdes.Replace("\"", "");
@@ -289,7 +301,7 @@ namespace LiteDB
         }
       
 
-        public List<BsonDocument> ImageRetrieval(List<BsonDocument> orginalList)
+        public List<BsonDocument> ImageRetrieval(List<BsonDocument> orginalList, Query querry)
         {
            
             List<float> result=  new List<float>();   
@@ -299,27 +311,38 @@ namespace LiteDB
                 result.Add(confident);  
             }
             // get the most confident
+            int numberOfResult = querry.ImageLimit;
+        //    int maxIndex = result.IndexOf(result.Max());
 
-            int maxIndex = result.IndexOf(result.Max());
+            List<(float, BsonDocument)> pairedList = new List<(float, BsonDocument)>();
 
+            for(int i = 0; i < orginalList.Count;i++)
+            {
+                pairedList.Add((result[i], orginalList[i]));
+            }
+            pairedList.Sort((x, y) => y.Item1.CompareTo(x.Item1));
+
+            if (numberOfResult < pairedList.Count)
+            {
+                pairedList = pairedList.GetRange(0, numberOfResult);
+            }
             //remove unmatch bson doc
 
 
-            return new List<BsonDocument>() { orginalList[maxIndex] };      
+             return  pairedList.Select(x=> x.Item2).ToList();    
+            //return new List<BsonDocument>() { orginalList[maxIndex] };
         }
         public  float[] LoadFloatArrayFromTextFile(string filePath)
         {
             List<float> data = new List<float>();
             string line;
 
-            // Use a try-catch block to handle potential file access errors
             try
             {
                 using (StreamReader reader = new StreamReader(filePath))
                 {
                     while ((line = reader.ReadLine()) != null)
                     {
-                        // Split the line based on the comma separator (adjust if needed)
                         string[] stringValues = line.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
 
                         foreach (string value in stringValues)
@@ -331,9 +354,7 @@ namespace LiteDB
                                 data.Add(floatValue);
                             }
                             else
-                            {
-                                // Handle invalid values (optional)
-                                // You could throw an exception, log an error, or ignore them
+                            {                              
                                 Console.WriteLine($"Error parsing value: {value}");
                             }
                         }
@@ -343,17 +364,15 @@ namespace LiteDB
             catch (Exception ex)
             {
                 Console.WriteLine($"Error reading file: {ex.Message}");
-                // Re-throw the exception or handle it here as needed
+              
             }
 
-            // Convert the List<float> to a float array
             return data.ToArray();
         }
 
         public string ExtractID(string IDString)
         {
 
-            // Regular expression pattern to match the object ID
             string pattern = @"\:\s*(?:""([^""]*))";  // Matches with or without quotes
             Match match1 = Regex.Match(IDString, pattern);
             if (match1.Success) 

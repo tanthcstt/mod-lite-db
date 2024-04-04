@@ -26,6 +26,7 @@ namespace LiteDB.Studio
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             Application.Run(new MainForm(args.Length == 0 ? null : args[0]));
+           
         }
 
         private static void OnExit(object sender, EventArgs eventArgs)
