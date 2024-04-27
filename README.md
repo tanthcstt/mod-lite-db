@@ -29,11 +29,18 @@ The project may encounter errors if any directory contains Unicode characters.
 ### all syntax
 
 
-insert_img into TestImg values {bb:"Image(D:\\dog.jpg)"};
-insert_img into TestImg values {aa:"Image(D:\\Green.png)"};
-insert_img into TestImg values {aa:"Image(D:\\apple.jpg)"};
-insert_img into TestImg values {aa:"Image(D:\\or.jpg)"};
+insert_img into TestImg values {aa:"Image(D:\\LiteDBTestImg\\apple.jpg)", mssv:22521300};
+insert_img into TestImg values {aa:"Image(D:\\LiteDBTestImg\\Blue.png)"};
+insert_img into TestImg values {aa:"Image(D:\\LiteDBTestImg\\dog.jpg)"};
+insert_img into TestImg values {aa:"Image(D:\\LiteDBTestImg\\download.jpg)"};
+insert_img into TestImg values {aa:"Image(D:\\LiteDBTestImg\\Green.jpg)"};
+insert_img into TestImg values {aa:"Image(D:\\LiteDBTestImg\\Miner.png)"};
+insert_img into TestImg values {aa:"Image(D:\\LiteDBTestImg\\Peasant.png)"};
+insert_img into TestImg values {aa:"Image(D:\\LiteDBTestImg\\Swordman.png)"};
 
 select_image $ from TestImg where "An Apple";
 
 select_image $ from TestImg where "An Apple" limit 2;
+
+
+delete TestImg where mssv=22521300;

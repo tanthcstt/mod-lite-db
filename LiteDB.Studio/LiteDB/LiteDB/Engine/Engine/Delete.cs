@@ -31,6 +31,7 @@ namespace LiteDB.Engine
 
                 foreach (var id in ids)
                 {
+                    NetworkManager.GetInstance().DeleteWithID((BsonValue)id.ToString(),collection);  
                     var pkNode = indexer.Find(pk, id, false, LiteDB.Query.Ascending);
 
                     // if pk not found, continue

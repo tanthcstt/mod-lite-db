@@ -17,6 +17,7 @@ using System.Linq;
 using IronPython.Runtime;
 using Azure;
 using System.Text.RegularExpressions;
+using System.Collections.ObjectModel;
 namespace LiteDB
 {
    
@@ -34,7 +35,8 @@ namespace LiteDB
         private float[] DesVT = new float[] { };
         private bool isLoaded = false;
         public bool VectorizerDone = false;
-        private string API_Key = "";
+        private string API_Key = "dc6fb8cc97d449ada0231de2ed93d498";
+        private float _limitConfident = .2f;
         // Private constructor to prevent instantiation
         private NetworkManager()
         {
@@ -51,92 +53,7 @@ namespace LiteDB
             }
             return _instance;
         }
-       /* public  async void MakeRequest()
-        {
-            float[] vectorImg = new float[] { };
-            float[] vectorTxt = new float[] { };    
-            var client = new HttpClient();
-            var queryString = HttpUtility.ParseQueryString(string.Empty);
-
-            // Request headers
-            client.DefaultRequestHeaders.Add("Ocp-Apim-Subscription-Key", "");
-            queryString["model-version"] = "2022-04-11";
-            //  queryString["smartcrops-aspect-ratios"] = "{string}";
-           // queryString["gender-neutral-caption"] = "False";
-            string endPoint = "imagelabel.cognitiveservices.azure.com";
-            var uri = $"https://{endPoint}/computervision/retrieval:vectorizeImage?api-version=2023-02-01-preview&" + queryString;
-
-            HttpResponseMessage response;
-
-            // Request body  Features =
-           // byte[] byteData = Encoding.UTF8.GetBytes(@"D:\dog.jpg");
-            byte[] byteData = ConvertImageToByteArray(@"D:\Miner.png");
-
-
-            //parse image to vector
-
-            using (var content = new ByteArrayContent(byteData))
-            {
-                content.Headers.ContentType = new MediaTypeHeaderValue("application/octet-stream");
-                response = await client.PostAsync(uri, content);
-
-                if (response.IsSuccessStatusCode) // Check for successful response
-                {
-                    string jsonResponse;
-                    using (var contentStream = await response.Content.ReadAsStreamAsync())
-                    {
-                        using (var reader = new StreamReader(contentStream))
-                        {
-                            jsonResponse = await reader.ReadToEndAsync();
-                        }
-                    }
-
-                    JObject jsonObject = JObject.Parse(jsonResponse);
-                    JArray vectorArray = (JArray)jsonObject["vector"];
-                    vectorImg = vectorArray.Select(token => (float)token).ToArray();
-
-
-
-                }
-            }
-
-
-            //parse text to vector
-
-            var queryStringnew = HttpUtility.ParseQueryString(string.Empty);
-               queryStringnew["model-version"] = "2023-04-15";
-            client.DefaultRequestHeaders.Add("Ocp-Apim-Subscription-Key", "");
-            var uriNew = "https://imagelabel.cognitiveservices.azure.com/computervision/retrieval:vectorizeText?api-version=2023-02-01-preview&model-version=2022-04-11";
-                string p = "{\"text\": \"A man hold a kinfe\"}";
-            byte[] prompt = Encoding.UTF8.GetBytes(p);
-            using (var aa = new ByteArrayContent(prompt))
-            {
-                aa.Headers.ContentType = new MediaTypeHeaderValue("application/json");
-                response = await client.PostAsync(uriNew, aa);
-
-
-                if (response.IsSuccessStatusCode) // Check for successful response
-                {
-                    string jsonResponse;
-                    using (var contentStream = await response.Content.ReadAsStreamAsync())
-                    {
-                        using (var reader = new StreamReader(contentStream))
-                        {
-                            jsonResponse = await reader.ReadToEndAsync();
-                        }
-
-                        JObject jsonObject = JObject.Parse(jsonResponse);
-                        JArray vectorArray = (JArray)jsonObject["vector"];
-                        vectorTxt =  vectorArray.Select(token => (float)token).ToArray();
-
-                    }
-                }
-            }
-            Console.WriteLine(vectorImg.Length); 
-            Console.WriteLine(vectorTxt.Length);
-            float confident = GetCosineSimilarity(vectorTxt, vectorImg);
-            Console.WriteLine($"{confident}");  
-        }*/
+     
 
         public  float GetCosineSimilarity(float[] vector1, float[] vector2)
         {
@@ -310,26 +227,26 @@ namespace LiteDB
                 float confident = GetCosineSimilarity(DesVT, kvp.Value.ToArray());
                 result.Add(confident);  
             }
-            // get the most confident
             int numberOfResult = querry.ImageLimit;
-        //    int maxIndex = result.IndexOf(result.Max());
-
+        
             List<(float, BsonDocument)> pairedList = new List<(float, BsonDocument)>();
 
             for(int i = 0; i < orginalList.Count;i++)
-            {
+            {              
                 pairedList.Add((result[i], orginalList[i]));
             }
+
             pairedList.Sort((x, y) => y.Item1.CompareTo(x.Item1));
 
             if (numberOfResult < pairedList.Count)
             {
                 pairedList = pairedList.GetRange(0, numberOfResult);
             }
+            pairedList.RemoveAll(pair => pair.Item1 < _limitConfident);
             //remove unmatch bson doc
 
 
-             return  pairedList.Select(x=> x.Item2).ToList();    
+            return  pairedList.Select(x=> x.Item2).ToList();    
             //return new List<BsonDocument>() { orginalList[maxIndex] };
         }
         public  float[] LoadFloatArrayFromTextFile(string filePath)
@@ -411,9 +328,43 @@ namespace LiteDB
             }
         }
 
+        public void OnDropCollections(string collection)
+        {
+            string saveDirectory = Path.GetDirectoryName(ConnectionManager.GetInstance().ConnectionString.Filename);
+            string vtDirectory = Path.Combine(saveDirectory, "Vectorize", collection);
+            string imgDirectory = Path.Combine(saveDirectory, "Images", collection);
+            if (Directory.Exists(imgDirectory))
+            {
+                Directory.Delete(imgDirectory,true);  
+
+            }
+
+            if(Directory.Exists(vtDirectory)) 
+            { 
+                Directory.Delete(vtDirectory, true);  
+            }
+        }
 
 
+        // delete image and vector
+        public void DeleteWithID(string rawId, string collection)
+        {
+            string extractedID = ExtractID(rawId);
 
+            string saveDirectory = Path.GetDirectoryName(ConnectionManager.GetInstance().ConnectionString.Filename);
+            string vtDirectory = Path.Combine(saveDirectory, "Vectorize", collection);
+            string imgDirectory = Path.Combine(saveDirectory, "Images", collection);
+            if (Directory.Exists(imgDirectory))
+            {
+                Directory.Delete(Path.Combine(imgDirectory,extractedID), true);
+
+            }
+
+            if (Directory.Exists(vtDirectory))
+            {
+                Directory.Delete(Path.Combine(vtDirectory,extractedID), true);
+            }
+        }
 
     }
 

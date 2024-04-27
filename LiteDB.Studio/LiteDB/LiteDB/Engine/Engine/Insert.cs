@@ -106,9 +106,14 @@ namespace LiteDB.Engine
             // save image
 
             string saveDirectory =Path.GetDirectoryName(ConnectionManager.GetInstance().ConnectionString.Filename);
-            saveDirectory = Path.Combine(saveDirectory, "Images");
+            saveDirectory = Path.Combine(saveDirectory, "Images", collection);
+            if (!Directory.Exists(saveDirectory))
+            {
+                Directory.CreateDirectory(saveDirectory);
+            }
             byte[] imageBytes = File.ReadAllBytes(path);
-            File.WriteAllBytes(Path.Combine(saveDirectory, Path.GetFileName(path)), imageBytes);
+            string fullpath = Path.Combine(saveDirectory, NetworkManager.GetInstance().ExtractID(id)) + Path.GetExtension(path);
+            File.WriteAllBytes(fullpath, imageBytes);
 
             // vectorize and save for retrieval
 

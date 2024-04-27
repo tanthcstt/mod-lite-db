@@ -37,7 +37,10 @@ namespace LiteDB
                 _tokenizer.ReadToken().Expect(TokenType.EOF, TokenType.SemiColon);
 
                 var result = _engine.DropCollection(collection);
-
+                if (result)
+                {
+                   NetworkManager.GetInstance().OnDropCollections(collection);  
+                }
                 return new BsonDataReader(result);
             }
             else
