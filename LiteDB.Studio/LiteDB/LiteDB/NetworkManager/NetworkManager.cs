@@ -242,12 +242,20 @@ namespace LiteDB
             {
                 pairedList = pairedList.GetRange(0, numberOfResult);
             }
-            pairedList.RemoveAll(pair => pair.Item1 < _limitConfident);
-            //remove unmatch bson doc
 
+            if (querry.ImageLimit == int.MaxValue)
+            {
+                //calculate confident threshold
+                _limitConfident = CalculateAverageDistance(result.ToArray());
+                float mostConfident = pairedList[0].Item1;
+                //   pairedList.RemoveAll(pair => pair.Item1 < _limitConfident);
+                pairedList = pairedList
+                    .Where(item => mostConfident - item.Item1 < _limitConfident)
+                    .ToList();
+            }
+          
 
-            return  pairedList.Select(x=> x.Item2).ToList();    
-            //return new List<BsonDocument>() { orginalList[maxIndex] };
+            return pairedList.Select(x=> x.Item2).ToList();    
         }
         public  float[] LoadFloatArrayFromTextFile(string filePath)
         {
@@ -363,6 +371,30 @@ namespace LiteDB
             if (Directory.Exists(vtDirectory))
             {
                 Directory.Delete(Path.Combine(vtDirectory,extractedID), true);
+            }
+        }
+
+        float CalculateAverageDistance(float[] array)
+        {
+            float totalDistance = 0.0f;
+            int count = 0;
+
+            for (int i = 0; i < array.Length; i++)
+            {
+                for (int j = i + 1; j < array.Length; j++)
+                {
+                    totalDistance += Math.Abs(array[i] - array[j]);
+                    count++;
+                }
+            }
+
+            if (count > 0)
+            {
+                return totalDistance / count;
+            }
+            else
+            {
+                return 0.0f; 
             }
         }
 
