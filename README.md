@@ -4,6 +4,10 @@
 
 The project may encounter errors if any directory contains Unicode characters.
 
+## Installer
+[LiteDBStudio.zip](https://github.com/tanthcstt/mod-lite-db/files/15283713/LiteDBStudio.zip)
+
+
 ### all syntax
 
 ## Insert Image
