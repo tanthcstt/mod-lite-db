@@ -7,7 +7,7 @@ The project may encounter errors if any directory contains Unicode characters.
 ### all syntax
 
 ## Insert Image
-insert_img into TestImg values {aa:"Image(D:\\LiteDBTestImg\\apple.jpg)", mssv:22521300};
+insert_img into TestImg values {aa:"Image(D:\\LiteDBTestImg\\aaa.jpg)", mssv:22521300};
 insert_img into TestImg values {aa:"Image(D:\\LiteDBTestImg\\Blue.png)"};
 insert_img into TestImg values {aa:"Image(D:\\LiteDBTestImg\\dog.jpg)"};
 insert_img into TestImg values {aa:"Image(D:\\LiteDBTestImg\\download.jpg)"};

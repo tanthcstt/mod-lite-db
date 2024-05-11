@@ -7,15 +7,11 @@ using System.Web;
 //using Duke;
 using Mono.Web;
 using System.Threading.Tasks;
-using Tensorflow;
 using System.IO;
 using Newtonsoft.Json;
-using static HDF.PInvoke.H5T;
 using System.Collections.Generic;
 using Newtonsoft.Json.Linq;
 using System.Linq;
-using IronPython.Runtime;
-using Azure;
 using System.Text.RegularExpressions;
 using System.Collections.ObjectModel;
 namespace LiteDB
@@ -37,6 +33,7 @@ namespace LiteDB
         public bool VectorizerDone = false;
         private string API_Key = "dc6fb8cc97d449ada0231de2ed93d498";
         private float _limitConfident = .2f;
+        private float _minConfident = .15f;
         // Private constructor to prevent instantiation
         private NetworkManager()
         {

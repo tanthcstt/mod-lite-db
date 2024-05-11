@@ -1,14 +1,11 @@
 ﻿
-using Microsoft.ML.OnnxRuntime;
-using Python.Runtime;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using static LiteDB.Constants;
-using Microsoft.ML.AutoML;
-using Microsoft.ML.OnnxRuntime.Tensors;
+
 using System.Drawing.Imaging;
 using System.Drawing;
 using System.Runtime.InteropServices;
