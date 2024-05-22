@@ -119,14 +119,14 @@ namespace LiteDB.Engine
                     }
                 }
 
-                // NetworkManager.GetInstance().MakeRequest();
+             //vectorize description
                 NetworkManager.GetInstance().Vectorizer(VectorizeDataType.Text, _query.ImageDescription,null,_collection).Wait() ;
 
                 while(NetworkManager.GetInstance().VectorizerDone == false)
                 {
                     Console.WriteLine("saa");
                 }
-
+                // return result from image retrieval
                 return new BsonDataReader(NetworkManager.GetInstance().ImageRetrieval(listDoc,_query), _collection, _state);
 
             } else

@@ -31,7 +31,6 @@ namespace LiteDB.Engine
 
                 foreach (var doc in docs)
                 {
-                    //save image here
 
                     _state.Validate();
 
@@ -39,8 +38,9 @@ namespace LiteDB.Engine
 
                     this.InsertDocument(snapshot, doc, autoId, indexer, data);
                     
+                    // if docs is image => call OnInsertImage 
                     var x = IsImage(doc, collection,OnInsertImage);   
-                    Console.WriteLine(x);
+               
                     count++;
                 }
 
