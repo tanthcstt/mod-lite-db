@@ -31,7 +31,7 @@ namespace LiteDB
         private float[] DesVT = new float[] { };
         private bool isLoaded = false;
         public bool VectorizerDone = false;
-        private string API_Key = "dc6fb8cc97d449ada0231de2ed93d498";
+        private string API_Key = "";
         private float _limitConfident = .2f;
         private float _minConfident = .15f;
         // Private constructor to prevent instantiation
